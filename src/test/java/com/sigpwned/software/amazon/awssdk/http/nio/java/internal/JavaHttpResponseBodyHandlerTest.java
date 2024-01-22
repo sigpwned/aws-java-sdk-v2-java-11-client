@@ -42,7 +42,7 @@ public class JavaHttpResponseBodyHandlerTest {
     ArgumentCaptor<SdkHttpResponse> capturedResponse = ArgumentCaptor.forClass(
         SdkHttpResponse.class);
     verify(mockSdkHttpResponseHandler).onHeaders(capturedResponse.capture());
-    verify(mockSdkHttpResponseHandler).onStream(listToByteBufferProcessor.getPublisherToSdk());
+    verify(mockSdkHttpResponseHandler).onStream(listToByteBufferProcessor.getPublisher());
 
     assertEquals(responseInfo.statusCode(), capturedResponse.getValue().statusCode());
     assertEquals(httpHeaders.map(), capturedResponse.getValue().headers());

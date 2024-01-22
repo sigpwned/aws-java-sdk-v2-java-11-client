@@ -71,7 +71,7 @@ public class ListToByteBufferProcessorTest {
 
     ReplayProcessor<ByteBuffer> replayProcessor = ReplayProcessor.create();
 
-    listToByteBufferProcessor.getPublisherToSdk().subscribe(replayProcessor);
+    listToByteBufferProcessor.getPublisher().subscribe(replayProcessor);
     bufferListPublisher.subscribe(listToByteBufferProcessor);
     List<ByteBuffer> resultList = Flowable.fromPublisher(replayProcessor).toList().blockingGet();
     assertThat(resultList.get(0).toString().equals("Hello World") && resultList.get(1).toString()
@@ -94,14 +94,14 @@ public class ListToByteBufferProcessorTest {
   @Test
   public void onErrorTest() {
     errorPublisher.subscribe(FlowAdapters.toFlowSubscriber(listToByteBufferProcessor));
-    listToByteBufferProcessor.getPublisherToSdk().subscribe(simSdkSubscriber);
+    listToByteBufferProcessor.getPublisher().subscribe(simSdkSubscriber);
     listToByteBufferProcessor.onComplete();
   }
 
   @Test
   public void onCompleteTest() {
     completePublisher.subscribe(FlowAdapters.toFlowSubscriber(listToByteBufferProcessor));
-    listToByteBufferProcessor.getPublisherToSdk().subscribe(simSdkSubscriber);
+    listToByteBufferProcessor.getPublisher().subscribe(simSdkSubscriber);
     listToByteBufferProcessor.onComplete();
   }
 
@@ -115,7 +115,7 @@ public class ListToByteBufferProcessorTest {
     testList1.add(buf2);
 
     publishProcessor.subscribe(listToByteBufferProcessor);
-    listToByteBufferProcessor.getPublisherToSdk().subscribe(simSdkSubscriber);
+    listToByteBufferProcessor.getPublisher().subscribe(simSdkSubscriber);
     publishProcessor.onNext(testList1);
     publishProcessor.onComplete();
     listToByteBufferProcessor.onComplete();

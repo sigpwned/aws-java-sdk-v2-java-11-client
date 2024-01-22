@@ -10,7 +10,6 @@ import org.reactivestreams.FlowAdapters;
 import org.reactivestreams.Subscriber;
 import software.amazon.awssdk.http.async.AsyncExecuteRequest;
 import software.amazon.awssdk.http.async.SdkHttpContentPublisher;
-import com.sigpwned.software.amazon.awssdk.http.nio.java.internal.JavaHttpRequestFactory;
 
 public class JavaHttpRequestFactoryTest {
 
