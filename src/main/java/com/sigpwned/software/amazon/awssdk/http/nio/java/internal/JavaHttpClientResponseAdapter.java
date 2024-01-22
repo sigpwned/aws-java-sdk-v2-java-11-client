@@ -26,16 +26,15 @@ final class JavaHttpClientResponseAdapter implements BodyHandler<Void> {
 
   @Override
   public BodySubscriber<Void> apply(ResponseInfo responseInfo) {
-    SdkHttpResponse headers = SdkHttpFullResponse.builder()
-        .headers(responseInfo.headers().map())
-        .statusCode(responseInfo.statusCode())
-        .build(); // get the headers from responseInfo
+    // get the headers from responseInfo
+    final SdkHttpResponse head = SdkHttpFullResponse.builder().statusCode(responseInfo.statusCode())
+        .headers(responseInfo.headers().map()).build();
 
-    getResponseHandler().onHeaders(headers);
+    getResponseHandler().onHeaders(head);
 
-    JavaHttpClientBodyProcessor processor = new JavaHttpClientBodyProcessor();
+    final JavaHttpClientBodyProcessor processor = new JavaHttpClientBodyProcessor();
 
-    BodySubscriber<Void> result = HttpResponse.BodySubscribers.fromSubscriber(processor);
+    final BodySubscriber<Void> result = HttpResponse.BodySubscribers.fromSubscriber(processor);
 
     getResponseHandler().onStream(FlowAdapters.toPublisher(processor));
 

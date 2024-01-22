@@ -2,18 +2,21 @@ package com.sigpwned.software.amazon.awssdk.http.nio.java;
 
 import com.sigpwned.software.amazon.awssdk.http.ExecutorProvider;
 import com.sigpwned.software.amazon.awssdk.http.nio.java.internal.JavaHttpClientRequestExecutor;
+import java.net.Socket;
 import java.net.http.HttpClient;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.X509ExtendedTrustManager;
 import software.amazon.awssdk.annotations.SdkPublicApi;
 import software.amazon.awssdk.http.Protocol;
 import software.amazon.awssdk.http.TlsKeyManagersProvider;
@@ -72,7 +75,7 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
     this.serviceDefaultsMap = serviceDefaultsMap;
   }
 
-  private HttpClient getHttpClient() {
+  HttpClient getHttpClient() {
     return javaHttpClient;
   }
 
@@ -356,7 +359,7 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
       log.warn(() ->
           "SSL Certificate verification is disabled. This is not a safe setting and should only be "
               + "used for testing.");
-      trustManagers = new TrustManager[]{TrustAllManager.INSTANCE};
+      trustManagers = new TrustManager[]{TrustAllTrustManager.INSTANCE};
     }
 
     TlsKeyManagersProvider provider = options.get(
@@ -380,23 +383,47 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
    * href="https://github.com/aws/aws-sdk-java-v2/blob/10121d4ed8497a3c5d415475975373d71013517f/http-clients/url-connection-client/src/main/java/software/amazon/awssdk/http/urlconnection/UrlConnectionHttpClient.java#L603">
    * https://github.com/aws/aws-sdk-java-v2/blob/10121d4ed8497a3c5d415475975373d71013517f/http-clients/url-connection-client/src/main/java/software/amazon/awssdk/http/urlconnection/UrlConnectionHttpClient.java#L603</a>
    */
-  private static class TrustAllManager implements X509TrustManager {
+  static class TrustAllTrustManager extends X509ExtendedTrustManager {
 
-    private static final TrustAllManager INSTANCE = new TrustAllManager();
+    public static final TrustAllTrustManager INSTANCE = new TrustAllTrustManager();
 
     @Override
-    public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
-      log.debug(() -> "Accepting a client certificate: " + x509Certificates[0].getSubjectDN());
+    public void checkClientTrusted(X509Certificate[] chain, String s) {
+      log.debug(() -> "Accepting a client certificate: " + chain[0].getSubjectDN());
     }
 
     @Override
-    public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
-      log.debug(() -> "Accepting a server certificate: " + x509Certificates[0].getSubjectDN());
+    public void checkServerTrusted(X509Certificate[] chain, String s) {
+      log.debug(() -> "Accepting a server certificate: " + chain[0].getSubjectDN());
     }
 
     @Override
     public X509Certificate[] getAcceptedIssuers() {
       return new X509Certificate[0];
+    }
+
+    @Override
+    public void checkClientTrusted(X509Certificate[] chain, String authType, Socket socket)
+        throws CertificateException {
+      log.debug(() -> "Accepting a server certificate: " + chain[0].getSubjectDN());
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] chain, String authType, Socket socket)
+        throws CertificateException {
+      log.debug(() -> "Accepting a server certificate: " + chain[0].getSubjectDN());
+    }
+
+    @Override
+    public void checkClientTrusted(X509Certificate[] chain, String authType, SSLEngine engine)
+        throws CertificateException {
+      log.debug(() -> "Accepting a client certificate: " + chain[0].getSubjectDN());
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] chain, String authType, SSLEngine engine)
+        throws CertificateException {
+      log.debug(() -> "Accepting a server certificate: " + chain[0].getSubjectDN());
     }
   }
 }

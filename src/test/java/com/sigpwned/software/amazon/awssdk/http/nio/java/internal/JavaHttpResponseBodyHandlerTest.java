@@ -1,6 +1,7 @@
 package com.sigpwned.software.amazon.awssdk.http.nio.java.internal;
 
 import static junit.framework.TestCase.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,21 +14,18 @@ import java.util.List;
 import java.util.Map;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.reactivestreams.Publisher;
 import software.amazon.awssdk.http.SdkHttpResponse;
 import software.amazon.awssdk.http.async.SdkAsyncHttpResponseHandler;
 
 public class JavaHttpResponseBodyHandlerTest {
 
   @Test
+  @SuppressWarnings("unchecked")
   public void BodyHandlerCreatedSuccessfullyTest() {
     SdkAsyncHttpResponseHandler mockSdkHttpResponseHandler = mock(
         SdkAsyncHttpResponseHandler.class);
     HttpResponse.ResponseInfo responseInfo = mock(HttpResponse.ResponseInfo.class);
-
-    ListToByteBufferProcessor listToByteBufferProcessor = new ListToByteBufferProcessor();
-
-    JavaHttpResponseBodyHandler javaBodyHandler = new JavaHttpResponseBodyHandler(
-        mockSdkHttpResponseHandler, listToByteBufferProcessor);
 
     Map<String, List<String>> headers = new HashMap<>();
     headers.put("foo", Collections.singletonList("bar"));
@@ -37,15 +35,15 @@ public class JavaHttpResponseBodyHandlerTest {
     when(responseInfo.headers()).thenReturn(httpHeaders);
     when(responseInfo.statusCode()).thenReturn(200);
 
-    javaBodyHandler.apply(responseInfo);
+    new JavaHttpClientResponseAdapter(mockSdkHttpResponseHandler)
+        .apply(responseInfo);
 
     ArgumentCaptor<SdkHttpResponse> capturedResponse = ArgumentCaptor.forClass(
         SdkHttpResponse.class);
     verify(mockSdkHttpResponseHandler).onHeaders(capturedResponse.capture());
-    verify(mockSdkHttpResponseHandler).onStream(listToByteBufferProcessor.getPublisher());
+    verify(mockSdkHttpResponseHandler).onStream(any(Publisher.class));
 
     assertEquals(responseInfo.statusCode(), capturedResponse.getValue().statusCode());
     assertEquals(httpHeaders.map(), capturedResponse.getValue().headers());
   }
-
 }

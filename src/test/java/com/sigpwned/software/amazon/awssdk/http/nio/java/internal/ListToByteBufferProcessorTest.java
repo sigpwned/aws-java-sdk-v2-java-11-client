@@ -18,7 +18,6 @@ import org.reactivestreams.Subscription;
 
 public class ListToByteBufferProcessorTest {
 
-  private ListToByteBufferProcessor listToByteBufferProcessor = new ListToByteBufferProcessor();
   private PublishProcessor<List<ByteBuffer>> publishProcessor = PublishProcessor.create();
   private ErrorPublisher errorPublisher = new ErrorPublisher();
   private CompletePublisher completePublisher = new CompletePublisher();
@@ -65,44 +64,34 @@ public class ListToByteBufferProcessorTest {
     list1.add(tempBuffer2);
     list2.add(tempBuffer3);
 
-    Flowable<List<ByteBuffer>> bufferListPublisher = Flowable.just(list1, list2);
+    Flowable<List<ByteBuffer>> publisher = Flowable.just(list1, list2);
+    JavaHttpClientBodyProcessor processor = new JavaHttpClientBodyProcessor();
+    ReplayProcessor<ByteBuffer> subscriber = ReplayProcessor.create();
 
-    ListToByteBufferProcessor listToByteBufferProcessor = new ListToByteBufferProcessor();
+    processor.subscribe(FlowAdapters.toFlowSubscriber(subscriber));
+    publisher.subscribe(FlowAdapters.toSubscriber(processor));
 
-    ReplayProcessor<ByteBuffer> replayProcessor = ReplayProcessor.create();
+    List<ByteBuffer> received = Flowable.fromPublisher(subscriber).toList().blockingGet();
 
-    listToByteBufferProcessor.getPublisher().subscribe(replayProcessor);
-    bufferListPublisher.subscribe(listToByteBufferProcessor);
-    List<ByteBuffer> resultList = Flowable.fromPublisher(replayProcessor).toList().blockingGet();
-    assertThat(resultList.get(0).toString().equals("Hello World") && resultList.get(1).toString()
-        .equals("!"));
-  }
-
-  @Test
-  public void mapperTest() {
-    List<ByteBuffer> list = new ArrayList<>();
-    String tempString1 = "Hello";
-    String tempString2 = " World!";
-    ByteBuffer tempBuffer1 = ByteBuffer.wrap(tempString1.getBytes(StandardCharsets.UTF_8));
-    ByteBuffer tempBuffer2 = ByteBuffer.wrap(tempString2.getBytes(StandardCharsets.UTF_8));
-    list.add(tempBuffer1);
-    list.add(tempBuffer2);
-    ByteBuffer buffer = ListToByteBufferProcessor.convertListToByteBuffer(list);
-    assertEquals(tempString1 + tempString2, new String(buffer.array()));
+    assertThat(new String(received.get(0).array(), StandardCharsets.UTF_8)).isEqualTo(
+        "Hello World");
+    assertThat(new String(received.get(1).array(), StandardCharsets.UTF_8)).isEqualTo("!");
   }
 
   @Test
   public void onErrorTest() {
-    errorPublisher.subscribe(FlowAdapters.toFlowSubscriber(listToByteBufferProcessor));
-    listToByteBufferProcessor.getPublisher().subscribe(simSdkSubscriber);
-    listToByteBufferProcessor.onComplete();
+    JavaHttpClientBodyProcessor bodyProcessor = new JavaHttpClientBodyProcessor();
+    errorPublisher.subscribe(bodyProcessor);
+    bodyProcessor.subscribe(FlowAdapters.toFlowSubscriber(simSdkSubscriber));
+    bodyProcessor.onComplete();
   }
 
   @Test
   public void onCompleteTest() {
-    completePublisher.subscribe(FlowAdapters.toFlowSubscriber(listToByteBufferProcessor));
-    listToByteBufferProcessor.getPublisher().subscribe(simSdkSubscriber);
-    listToByteBufferProcessor.onComplete();
+    JavaHttpClientBodyProcessor bodyProcessor = new JavaHttpClientBodyProcessor();
+    bodyProcessor.subscribe(FlowAdapters.toFlowSubscriber(simSdkSubscriber));
+    completePublisher.subscribe(bodyProcessor);
+    bodyProcessor.onComplete();
   }
 
   @Test
@@ -114,11 +103,12 @@ public class ListToByteBufferProcessorTest {
     testList1.add(buf1);
     testList1.add(buf2);
 
-    publishProcessor.subscribe(listToByteBufferProcessor);
-    listToByteBufferProcessor.getPublisher().subscribe(simSdkSubscriber);
+    JavaHttpClientBodyProcessor bodyProcessor = new JavaHttpClientBodyProcessor();
+
+    publishProcessor.subscribe(FlowAdapters.toSubscriber(bodyProcessor));
+    bodyProcessor.subscribe(FlowAdapters.toFlowSubscriber(simSdkSubscriber));
     publishProcessor.onNext(testList1);
     publishProcessor.onComplete();
-    listToByteBufferProcessor.onComplete();
   }
 
   public static class ErrorPublisher implements Flow.Publisher<List<ByteBuffer>> {
@@ -157,6 +147,5 @@ public class ListToByteBufferProcessorTest {
 
       subscriber.onComplete();
     }
-
   }
 }

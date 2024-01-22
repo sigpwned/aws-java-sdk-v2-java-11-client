@@ -17,7 +17,6 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.http.trafficlistener.WiremockNetworkTrafficListener;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.sigpwned.software.amazon.awssdk.http.nio.java.JavaHttpClientHttpConfigurationOption;
 import com.sigpwned.software.amazon.awssdk.http.nio.java.RecordingResponseHandler;
 import io.reactivex.Flowable;
 import java.net.Socket;
@@ -44,7 +43,6 @@ import software.amazon.awssdk.http.SdkHttpMethod;
 import software.amazon.awssdk.http.SdkHttpRequest;
 import software.amazon.awssdk.http.async.AsyncExecuteRequest;
 import software.amazon.awssdk.http.async.SdkHttpContentPublisher;
-import software.amazon.awssdk.utils.AttributeMap;
 
 public class JavaHttpRequestExecutorTest {
 
@@ -99,14 +97,12 @@ public class JavaHttpRequestExecutorTest {
     // Mock the HttpClient to capture the request flows into this client
     MyHttpClient mockJavaHttpClient = mock(MyHttpClient.class);
 
-    JavaHttpRequestExecutor javaHttpRequestExecutor = new JavaHttpRequestExecutor(
-        mockJavaHttpClient,
-        AttributeMap.builder().build()
-            .merge(JavaHttpClientHttpConfigurationOption.GLOBAL_HTTP_DEFAULTS));
-    CompletableFuture<HttpResponse<Void>> responseFuture = new CompletableFuture();
+    JavaHttpClientRequestExecutor javaHttpRequestExecutor = new JavaHttpClientRequestExecutor(
+        mockJavaHttpClient, Duration.ofSeconds(30));
+    CompletableFuture<HttpResponse<Void>> responseFuture = new CompletableFuture<>();
     when(mockJavaHttpClient.sendAsync(any(HttpRequest.class),
         any(HttpResponse.BodyHandler.class))).thenReturn(responseFuture);
-    javaHttpRequestExecutor.requestExecution(
+    javaHttpRequestExecutor.execute(
         AsyncExecuteRequest.builder().request(request).requestContentPublisher(createProvider(body))
             .responseHandler(recorder).build());
 
@@ -147,12 +143,11 @@ public class JavaHttpRequestExecutorTest {
     RecordingResponseHandler recorder = new RecordingResponseHandler();
 
     HttpClient javaHttpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1)
-        .connectTimeout(Duration.ofSeconds(20)).build();
-    JavaHttpRequestExecutor javaHttpRequestExecutor = new JavaHttpRequestExecutor(javaHttpClient,
-        AttributeMap.builder().build()
-            .merge(JavaHttpClientHttpConfigurationOption.GLOBAL_HTTP_DEFAULTS));
+        .connectTimeout(Duration.ofSeconds(1)).build();
+    JavaHttpClientRequestExecutor javaHttpRequestExecutor = new JavaHttpClientRequestExecutor(
+        javaHttpClient, Duration.ofSeconds(1));
 
-    javaHttpRequestExecutor.requestExecution(
+    javaHttpRequestExecutor.execute(
         AsyncExecuteRequest.builder().request(request).requestContentPublisher(createProvider(body))
             .responseHandler(recorder).build()).join();
 
@@ -176,11 +171,10 @@ public class JavaHttpRequestExecutorTest {
       HttpClient javaHttpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1)
           .connectTimeout(Duration.ofSeconds(20)).build();
 
-      JavaHttpRequestExecutor javaHttpRequestExecutor = new JavaHttpRequestExecutor(javaHttpClient,
-          AttributeMap.builder().build()
-              .merge(JavaHttpClientHttpConfigurationOption.GLOBAL_HTTP_DEFAULTS));
+      JavaHttpClientRequestExecutor javaHttpRequestExecutor = new JavaHttpClientRequestExecutor(
+          javaHttpClient, Duration.ofSeconds(30));
 
-      javaHttpRequestExecutor.requestExecution(AsyncExecuteRequest.builder().request(request)
+      javaHttpRequestExecutor.execute(AsyncExecuteRequest.builder().request(request)
           .requestContentPublisher(createProvider(body)).responseHandler(recorder).build()).join();
     } catch (Exception e) {
       e.printStackTrace();
