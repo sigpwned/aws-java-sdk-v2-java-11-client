@@ -25,4 +25,4 @@ So you want to help, huh? Outstanding!
 
 The most important work happening right now is determining the list of tests required for the asynchronous client. Please check out [#2](https://github.com/sigpwned/aws-java-sdk-v2-java-nio-client/issues/2) for instructions on how to contribute.
 
-Naturally, all helpers will be added to the contributors.
+Naturally, all helpers will be added to the [contributors](https://github.com/sigpwned/aws-java-sdk-v2-java-nio-client/blob/main/CONTRIBUTORS.md).
