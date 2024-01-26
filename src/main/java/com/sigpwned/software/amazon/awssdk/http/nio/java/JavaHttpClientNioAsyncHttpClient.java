@@ -79,12 +79,25 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
     return javaHttpClient;
   }
 
+  /**
+   * Returns a {@link CompletableFuture} that will be completed when the response is completed. If
+   * the request succeeds, then the future will be completed normally. If the request fails, then
+   * the future will be completed exceptionally with an IOException, of a relevant type (e.g.,
+   * {@link java.net.http.HttpTimeoutException}, {@link java.net.http.HttpConnectTimeoutException},
+   * {@link java.net.ConnectException}) if possible.
+   *
+   * @param request The request object.
+   * @return The future
+   * @throws java.util.concurrent.ExecutionException containing an {@link java.io.IOException} if
+   *                                                 the request fails
+   */
   @Override
   public CompletableFuture<Void> execute(AsyncExecuteRequest request) {
+    // TODO What should happen if the future is cancelled? What does happen? Check Netty.
+
     // Wholly delegate to an internal API
     Duration requestTimeout = getResponseTimeout(serviceDefaultsMap);
-    return new JavaHttpClientRequestExecutor(getHttpClient(), requestTimeout).execute(
-            request)
+    return new JavaHttpClientRequestExecutor(getHttpClient(), requestTimeout).execute(request)
         .thenApply(response -> null);
   }
 

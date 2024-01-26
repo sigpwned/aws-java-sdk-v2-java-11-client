@@ -60,9 +60,10 @@ final class JavaHttpClientRequestMapper {
 
   private static HttpRequest.BodyPublisher bodyPublisher(AsyncExecuteRequest sdkExecuteRequest) {
     final SdkHttpContentPublisher sdkHttpContentPublisher = sdkExecuteRequest.requestContentPublisher();
-    final Optional<Long> maybeContentLength = sdkHttpContentPublisher.contentLength();
-    if (!sdkExecuteRequest.fullDuplex() && maybeContentLength.orElse(0L) == 0L) {
-      // TODO Should this be an AND as written, or an OR for no body in either case?
+    final Optional<Long> maybeContentLength = Optional.ofNullable(sdkHttpContentPublisher)
+        .flatMap(SdkHttpContentPublisher::contentLength);
+    if (!sdkExecuteRequest.fullDuplex() || maybeContentLength.orElse(-1L) == 0L) {
+      // TODO I made this an OR, but it was originally an AND.
       return BodyPublishers.noBody();
     }
 

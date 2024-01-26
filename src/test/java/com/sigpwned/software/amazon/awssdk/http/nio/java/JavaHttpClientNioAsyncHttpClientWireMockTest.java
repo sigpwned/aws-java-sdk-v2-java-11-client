@@ -50,7 +50,7 @@ import software.amazon.awssdk.http.async.AsyncExecuteRequest;
 import software.amazon.awssdk.http.async.SdkAsyncHttpClient;
 import software.amazon.awssdk.http.async.SdkHttpContentPublisher;
 
-@Ignore("There seem to be errors in this test. Re-enable after addressing.")
+// @Ignore("There seem to be errors in this test. Re-enable after addressing.")
 public class JavaHttpClientNioAsyncHttpClientWireMockTest {
 
   private final RecordingNetworkTrafficListener wiremockTrafficListener = new RecordingNetworkTrafficListener();
@@ -254,6 +254,7 @@ public class JavaHttpClientNioAsyncHttpClientWireMockTest {
 
   @Test(timeout = 3000)
   public void testResponseTimeoutError() throws Exception {
+
     String expectedErrorMsg = "java.net.http.HttpTimeoutException: request timed out";
     SdkAsyncHttpClient customClient = JavaHttpClientNioAsyncHttpClient.builder()
         .responseTimeout(Duration.ofMillis(500))

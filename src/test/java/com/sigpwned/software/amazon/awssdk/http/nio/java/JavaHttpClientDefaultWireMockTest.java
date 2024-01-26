@@ -1,6 +1,7 @@
 package com.sigpwned.software.amazon.awssdk.http.nio.java;
 
 import com.sigpwned.software.amazon.awssdk.http.nio.java.JavaHttpClientNioAsyncHttpClient.TrustAllTrustManager;
+import java.net.http.HttpClient;
 import javax.net.ssl.TrustManager;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;

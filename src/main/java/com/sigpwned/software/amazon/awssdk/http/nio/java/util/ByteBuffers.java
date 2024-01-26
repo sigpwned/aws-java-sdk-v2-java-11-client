@@ -49,4 +49,25 @@ public final class ByteBuffers {
 
     return result;
   }
+
+  /**
+   * <p>
+   * Converts a ByteBuffer to a new byte array. The resulting byte array will contain the contents
+   * of the ByteBuffer from the current position to the limit. The ByteBuffer's cursor will not be
+   * modified.
+   * </p>
+   *
+   * <p>
+   * This is not incredibly efficient, since it requires copying the contents of the ByteBuffer, so
+   * use with care. It is, however, very useful for testing!
+   * </p>
+   *
+   * @param buffer The ByteBuffer to convert.
+   * @return A byte array containing the contents of the ByteBuffer.
+   */
+  public static byte[] toByteArray(ByteBuffer buffer) {
+    byte[] bytes = new byte[buffer.remaining()];
+    buffer.duplicate().get(bytes);
+    return bytes;
+  }
 }
