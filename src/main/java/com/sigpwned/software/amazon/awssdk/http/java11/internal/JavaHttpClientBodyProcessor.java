@@ -1,6 +1,6 @@
-package com.sigpwned.software.amazon.awssdk.http.nio.java.internal;
+package com.sigpwned.software.amazon.awssdk.http.java11.internal;
 
-import com.sigpwned.software.amazon.awssdk.http.nio.java.util.ByteBuffers;
+import com.sigpwned.software.amazon.awssdk.http.java11.util.ByteBuffers;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.Flow.Processor;

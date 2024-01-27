@@ -1,4 +1,4 @@
-package com.sigpwned.software.amazon.awssdk.http.nio.java;
+package com.sigpwned.software.amazon.awssdk.http.java11;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;

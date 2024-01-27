@@ -157,7 +157,7 @@
         <configuration>
           <archive>
             <manifestEntries>
-              <Automatic-Module-Name>com.sigpwned.software.amazon.awssdk.http.nio.java
+              <Automatic-Module-Name>com.sigpwned.software.amazon.awssdk.http.java11
               </Automatic-Module-Name>
             </manifestEntries>
           </archive>

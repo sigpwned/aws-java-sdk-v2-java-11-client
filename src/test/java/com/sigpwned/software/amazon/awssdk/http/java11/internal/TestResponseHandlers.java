@@ -1,4 +1,4 @@
-package com.sigpwned.software.amazon.awssdk.http.nio.java.internal;
+package com.sigpwned.software.amazon.awssdk.http.java11.internal;
 
 import static software.amazon.awssdk.core.http.HttpResponseHandler.X_AMZN_REQUEST_ID_HEADER;
 

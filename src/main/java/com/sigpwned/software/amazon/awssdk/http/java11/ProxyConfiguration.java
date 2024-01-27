@@ -1,8 +1,8 @@
-package com.sigpwned.software.amazon.awssdk.http.nio.java;
+package com.sigpwned.software.amazon.awssdk.http.java11;
 
 import static software.amazon.awssdk.utils.StringUtils.isEmpty;
 
-import com.sigpwned.software.amazon.awssdk.http.nio.java.ProxyConfiguration.Builder;
+import com.sigpwned.software.amazon.awssdk.http.java11.ProxyConfiguration.Builder;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import software.amazon.awssdk.annotations.SdkPublicApi;
 import software.amazon.awssdk.utils.ProxySystemSetting;
-import software.amazon.awssdk.utils.StringUtils;
 import software.amazon.awssdk.utils.ToString;
 import software.amazon.awssdk.utils.Validate;
 import software.amazon.awssdk.utils.builder.CopyableBuilder;

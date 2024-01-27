@@ -1,7 +1,6 @@
-package com.sigpwned.software.amazon.awssdk.http.nio.java;
+package com.sigpwned.software.amazon.awssdk.http.java11;
 
-import com.sigpwned.software.amazon.awssdk.http.nio.java.JavaHttpClientNioAsyncHttpClient.TrustAllTrustManager;
-import java.net.http.HttpClient;
+import com.sigpwned.software.amazon.awssdk.http.java11.Java11AsyncHttpClient.TrustAllTrustManager;
 import javax.net.ssl.TrustManager;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,7 @@ public class JavaHttpClientDefaultWireMockTest extends SdkAsyncHttpClientH1TestS
 
   @Override
   protected SdkAsyncHttpClient setupClient() {
-    return JavaHttpClientNioAsyncHttpClient.builder()
+    return Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{TrustAllTrustManager.INSTANCE}).build();
   }
 

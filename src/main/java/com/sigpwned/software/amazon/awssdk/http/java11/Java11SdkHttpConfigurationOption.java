@@ -1,4 +1,4 @@
-package com.sigpwned.software.amazon.awssdk.http.nio.java;
+package com.sigpwned.software.amazon.awssdk.http.java11;
 
 import com.sigpwned.software.amazon.awssdk.http.ExecutorProvider;
 import java.time.Duration;
@@ -17,7 +17,7 @@ import software.amazon.awssdk.utils.AttributeMap;
  * @see SdkHttpConfigurationOption
  */
 @SdkProtectedApi
-public final class JavaHttpClientHttpConfigurationOption<T> extends AttributeMap.Key<T> {
+public final class Java11SdkHttpConfigurationOption<T> extends AttributeMap.Key<T> {
 
   /**
    * Option to disable SSL cert validation and SSL host name verification. By default, this option
@@ -56,20 +56,20 @@ public final class JavaHttpClientHttpConfigurationOption<T> extends AttributeMap
   /**
    * SSLParameters of the SSLSocket, could be set in HttpClient.
    */
-  public static final JavaHttpClientHttpConfigurationOption<SSLParameters> SSL_PARAMETERS = new JavaHttpClientHttpConfigurationOption<>(
+  public static final Java11SdkHttpConfigurationOption<SSLParameters> SSL_PARAMETERS = new Java11SdkHttpConfigurationOption<>(
       "SslParameters", SSLParameters.class);
 
   /**
    * Timeout for waiting for a response.
    */
-  public static final JavaHttpClientHttpConfigurationOption<Duration> RESPONSE_TIMEOUT = new JavaHttpClientHttpConfigurationOption<>(
+  public static final Java11SdkHttpConfigurationOption<Duration> RESPONSE_TIMEOUT = new Java11SdkHttpConfigurationOption<>(
       "ResponseTimeout", Duration.class);
 
   /**
    * The {@link ExecutorProvider} that will be used by the HTTP client when executing requests. If
    * the provider returns null, the client will use the default executor.
    */
-  public static final JavaHttpClientHttpConfigurationOption<ExecutorProvider> REQUEST_EXECUTOR_PROVIDER = new JavaHttpClientHttpConfigurationOption<>(
+  public static final Java11SdkHttpConfigurationOption<ExecutorProvider> REQUEST_EXECUTOR_PROVIDER = new Java11SdkHttpConfigurationOption<>(
       "RequestExecutorProvider", ExecutorProvider.class);
 
   private static final SSLParameters DEFAULT_SSL_PARAMETERS = new SSLParameters();
@@ -83,7 +83,7 @@ public final class JavaHttpClientHttpConfigurationOption<T> extends AttributeMap
 
   private final String name;
 
-  private JavaHttpClientHttpConfigurationOption(String name, Class<T> klazz) {
+  private Java11SdkHttpConfigurationOption(String name, Class<T> klazz) {
     super(klazz);
     this.name = name;
   }

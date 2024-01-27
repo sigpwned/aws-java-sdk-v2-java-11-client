@@ -1,4 +1,4 @@
-package com.sigpwned.software.amazon.awssdk.http.nio.java.util;
+package com.sigpwned.software.amazon.awssdk.http.java11.util;
 
 import static junit.framework.TestCase.assertEquals;
 

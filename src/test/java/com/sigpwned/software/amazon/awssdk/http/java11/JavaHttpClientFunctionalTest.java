@@ -1,4 +1,4 @@
-package com.sigpwned.software.amazon.awssdk.http.nio.java;
+package com.sigpwned.software.amazon.awssdk.http.java11;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.delete;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
@@ -19,8 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.sigpwned.software.amazon.awssdk.http.nio.java.JavaHttpClientNioAsyncHttpClient.TrustAllTrustManager;
-import com.sigpwned.software.amazon.awssdk.http.nio.java.util.ByteBuffers;
+import com.sigpwned.software.amazon.awssdk.http.java11.Java11AsyncHttpClient.TrustAllTrustManager;
+import com.sigpwned.software.amazon.awssdk.http.java11.util.ByteBuffers;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -118,7 +118,7 @@ public class JavaHttpClientFunctionalTest {
     mockServer.start();
 
     // Set up request (with HTTP Client embedded in Java 11+)
-    SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient client = Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{new TrustAllTrustManager()}).build();
 
     final AtomicReference<SdkHttpResponse> responseBuffer = new AtomicReference<>();
@@ -206,7 +206,7 @@ public class JavaHttpClientFunctionalTest {
     mockServer.start();
 
     // Set up request (with HTTP Client embedded in Java 11+)
-    SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient client = Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{new TrustAllTrustManager()}).build();
 
     final AtomicReference<SdkHttpResponse> responseBuffer = new AtomicReference<>();
@@ -263,7 +263,7 @@ public class JavaHttpClientFunctionalTest {
     mockServer.start();
 
     // Set up request (with HTTP Client embedded in Java 11+)
-    SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient client = Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{new TrustAllTrustManager()}).build();
 
     final AtomicReference<SdkHttpResponse> responseBuffer = new AtomicReference<>();
@@ -314,7 +314,7 @@ public class JavaHttpClientFunctionalTest {
   @Test(timeout = 5000)
   public void connectionRefusedTest() throws Exception {
     // Set up request (with HTTP Client embedded in Java 11+)
-    SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient client = Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{new TrustAllTrustManager()}).build();
 
     // We picked a random port. Guaranteed random, by dice roll. https://xkcd.com/221/
@@ -358,7 +358,7 @@ public class JavaHttpClientFunctionalTest {
     mockServer.start();
 
     // Set up request (with HTTP Client embedded in Java 11+)
-    SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient client = Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{new TrustAllTrustManager()})
         .responseTimeout(Duration.ofMillis(1000L)).build();
 
@@ -401,7 +401,7 @@ public class JavaHttpClientFunctionalTest {
     mockServer.start();
 
     // Set up request (with HTTP Client embedded in Java 11+)
-    SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient client = Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{new TrustAllTrustManager()}).build();
 
     final AtomicReference<SdkHttpResponse> responseBuffer = new AtomicReference<>();
@@ -459,7 +459,7 @@ public class JavaHttpClientFunctionalTest {
     mockServer.start();
 
     // Set up request (with HTTP Client embedded in Java 11+)
-    SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient client = Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{new TrustAllTrustManager()}).build();
 
     final AtomicReference<SdkHttpResponse> responseBuffer = new AtomicReference<>();
@@ -519,7 +519,7 @@ public class JavaHttpClientFunctionalTest {
     mockServer.start();
 
     // Set up request (with HTTP Client embedded in Java 11+)
-    SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient client = Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{new TrustAllTrustManager()}).build();
 
     final AtomicReference<SdkHttpResponse> responseBuffer = new AtomicReference<>();
@@ -578,7 +578,7 @@ public class JavaHttpClientFunctionalTest {
     mockServer.start();
 
     // Set up request (with HTTP Client embedded in Java 11+)
-    SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient client = Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{new TrustAllTrustManager()}).build();
 
     final AtomicReference<SdkHttpResponse> responseBuffer = new AtomicReference<>();
@@ -640,7 +640,7 @@ public class JavaHttpClientFunctionalTest {
     mockServer.start();
 
     // Set up request (with HTTP Client embedded in Java 11+)
-    SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient client = Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{new TrustAllTrustManager()}).build();
 
     final byte[] requestBodyBytes = requestBody.getBytes(StandardCharsets.UTF_8);
@@ -704,7 +704,7 @@ public class JavaHttpClientFunctionalTest {
     mockServer.start();
 
     // Set up request (with HTTP Client embedded in Java 11+)
-    SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient client = Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{new TrustAllTrustManager()}).build();
 
     final byte[] requestBodyBytes = requestBody.getBytes(StandardCharsets.UTF_8);
@@ -769,7 +769,7 @@ public class JavaHttpClientFunctionalTest {
     mockServer.start();
 
     // Set up request (with HTTP Client embedded in Java 11+)
-    SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient client = Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{new TrustAllTrustManager()}).build();
 
     final byte[] requestBodyBytes = requestBody.getBytes(StandardCharsets.UTF_8);
@@ -833,7 +833,7 @@ public class JavaHttpClientFunctionalTest {
     mockServer.start();
 
     // Set up request (with HTTP Client embedded in Java 11+)
-    SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient client = Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{new TrustAllTrustManager()}).build();
 
     final byte[] requestBodyBytes = requestBody.getBytes(StandardCharsets.UTF_8);
@@ -898,7 +898,7 @@ public class JavaHttpClientFunctionalTest {
     mockServer.start();
 
     // Set up request (with HTTP Client embedded in Java 11+)
-    SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient client = Java11AsyncHttpClient.builder()
         .tlsTrustManagersProvider(() -> new TrustManager[]{new TrustAllTrustManager()}).build();
 
     final byte[] requestBodyBytes = requestBody.getBytes(StandardCharsets.UTF_8);

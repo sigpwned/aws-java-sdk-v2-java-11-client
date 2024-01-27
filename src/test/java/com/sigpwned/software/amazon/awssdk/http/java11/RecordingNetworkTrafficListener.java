@@ -1,4 +1,4 @@
-package com.sigpwned.software.amazon.awssdk.http.nio.java;
+package com.sigpwned.software.amazon.awssdk.http.java11;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

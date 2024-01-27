@@ -1,9 +1,9 @@
-package com.sigpwned.software.amazon.awssdk.http.nio.java.internal;
+package com.sigpwned.software.amazon.awssdk.http.java11.internal;
 
 import static java.util.Objects.requireNonNull;
 
-import com.sigpwned.software.amazon.awssdk.http.nio.java.JavaHttpClientNioAsyncHttpClient;
-import com.sigpwned.software.amazon.awssdk.http.nio.java.util.MoreHttpHeaders;
+import com.sigpwned.software.amazon.awssdk.http.java11.Java11AsyncHttpClient;
+import com.sigpwned.software.amazon.awssdk.http.java11.util.MoreHttpHeaders;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.http.HttpClient;
@@ -17,7 +17,7 @@ import software.amazon.awssdk.annotations.SdkProtectedApi;
 import software.amazon.awssdk.http.async.AsyncExecuteRequest;
 
 /**
- * Internal implementation of request execution. The {@link JavaHttpClientNioAsyncHttpClient} will
+ * Internal implementation of request execution. The {@link Java11AsyncHttpClient} will
  * use this class to execute the request. That class is essentially just a user-facing configuration
  * wrapper for this business logic.
  */

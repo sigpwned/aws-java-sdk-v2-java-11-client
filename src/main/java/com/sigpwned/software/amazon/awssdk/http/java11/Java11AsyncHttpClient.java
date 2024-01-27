@@ -1,7 +1,7 @@
-package com.sigpwned.software.amazon.awssdk.http.nio.java;
+package com.sigpwned.software.amazon.awssdk.http.java11;
 
 import com.sigpwned.software.amazon.awssdk.http.ExecutorProvider;
-import com.sigpwned.software.amazon.awssdk.http.nio.java.internal.JavaHttpClientRequestExecutor;
+import com.sigpwned.software.amazon.awssdk.http.java11.internal.JavaHttpClientRequestExecutor;
 import java.net.Socket;
 import java.net.http.HttpClient;
 import java.security.KeyManagementException;
@@ -33,9 +33,9 @@ import software.amazon.awssdk.utils.Validate;
  * <p>This can be created via {@link @builder()}</p>
  */
 @SdkPublicApi
-public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClient {
+public final class Java11AsyncHttpClient implements SdkAsyncHttpClient {
 
-  private static final Logger log = Logger.loggerFor(JavaHttpClientNioAsyncHttpClient.class);
+  private static final Logger log = Logger.loggerFor(Java11AsyncHttpClient.class);
 
   private static final String CLIENT_NAME = "JavaNio";
 
@@ -51,7 +51,7 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
 
   private final AttributeMap serviceDefaultsMap;
 
-  private JavaHttpClientNioAsyncHttpClient(DefaultBuilder builder,
+  private Java11AsyncHttpClient(DefaultBuilder builder,
       AttributeMap serviceDefaultsMap) {
     /*this.configuration = new JavaHttpClientConfiguration(serviceDefaultsMap);*/
 
@@ -116,7 +116,7 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
    * to configure and construct a Java Http Client.
    */
   public static interface Builder extends
-      SdkAsyncHttpClient.Builder<JavaHttpClientNioAsyncHttpClient.Builder> {
+      SdkAsyncHttpClient.Builder<Java11AsyncHttpClient.Builder> {
 
     /**
      * The amount of time to wait for a connection before an exeception is thrown.
@@ -193,7 +193,7 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
     @Override
     public Builder connectionTimeout(Duration connectionTimeout) {
       Validate.isPositive(connectionTimeout, "connectionTimeout");
-      standardOptions.put(JavaHttpClientHttpConfigurationOption.CONNECTION_TIMEOUT,
+      standardOptions.put(Java11SdkHttpConfigurationOption.CONNECTION_TIMEOUT,
           connectionTimeout);
       return this;
     }
@@ -209,7 +209,7 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
 
     @Override
     public Builder protocol(Protocol protocol) {
-      standardOptions.put(JavaHttpClientHttpConfigurationOption.PROTOCOL, protocol);
+      standardOptions.put(Java11SdkHttpConfigurationOption.PROTOCOL, protocol);
       return this;
     }
 
@@ -224,7 +224,7 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
 
     @Override
     public Builder sslParameters(SSLParameters sslParameters) {
-      standardOptions.put(JavaHttpClientHttpConfigurationOption.SSL_PARAMETERS, sslParameters);
+      standardOptions.put(Java11SdkHttpConfigurationOption.SSL_PARAMETERS, sslParameters);
       return this;
     }
 
@@ -234,7 +234,7 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
 
     @Override
     public Builder responseTimeout(Duration responseTimeout) {
-      standardOptions.put(JavaHttpClientHttpConfigurationOption.RESPONSE_TIMEOUT, responseTimeout);
+      standardOptions.put(Java11SdkHttpConfigurationOption.RESPONSE_TIMEOUT, responseTimeout);
       return this;
     }
 
@@ -256,7 +256,7 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
      */
     @Override
     public Builder requestExecutorProvider(ExecutorProvider requestExecutorProvider) {
-      standardOptions.put(JavaHttpClientHttpConfigurationOption.REQUEST_EXECUTOR_PROVIDER,
+      standardOptions.put(Java11SdkHttpConfigurationOption.REQUEST_EXECUTOR_PROVIDER,
           requestExecutorProvider);
       return this;
     }
@@ -267,7 +267,7 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
 
     @Override
     public Builder tlsTrustManagersProvider(TlsTrustManagersProvider tlsTrustManagersProvider) {
-      standardOptions.put(JavaHttpClientHttpConfigurationOption.TLS_TRUST_MANAGERS_PROVIDER,
+      standardOptions.put(Java11SdkHttpConfigurationOption.TLS_TRUST_MANAGERS_PROVIDER,
           tlsTrustManagersProvider);
       return this;
     }
@@ -283,7 +283,7 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
 
     @Override
     public Builder tlsKeyManagersProvider(TlsKeyManagersProvider tlsKeyManagersProvider) {
-      standardOptions.put(JavaHttpClientHttpConfigurationOption.TLS_KEY_MANAGERS_PROVIDER,
+      standardOptions.put(Java11SdkHttpConfigurationOption.TLS_KEY_MANAGERS_PROVIDER,
           tlsKeyManagersProvider);
       return this;
     }
@@ -299,27 +299,27 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
 
     @Override
     public SdkAsyncHttpClient buildWithDefaults(AttributeMap serviceDefaults) {
-      return new JavaHttpClientNioAsyncHttpClient(this,
+      return new Java11AsyncHttpClient(this,
           standardOptions.build().merge(serviceDefaults)
-              .merge(JavaHttpClientHttpConfigurationOption.GLOBAL_HTTP_DEFAULTS));
+              .merge(Java11SdkHttpConfigurationOption.GLOBAL_HTTP_DEFAULTS));
     }
   }
 
   // REQUEST TIMEOUT ///////////////////////////////////////////////////////////
   private static Duration getResponseTimeout(AttributeMap serviceDefaultsMap) {
-    return serviceDefaultsMap.get(JavaHttpClientHttpConfigurationOption.RESPONSE_TIMEOUT);
+    return serviceDefaultsMap.get(Java11SdkHttpConfigurationOption.RESPONSE_TIMEOUT);
   }
 
   // REQUEST EXECUTOR //////////////////////////////////////////////////////////
   private static Executor getRequestExecutor(AttributeMap serviceDefaultsMap) {
-    return serviceDefaultsMap.get(JavaHttpClientHttpConfigurationOption.REQUEST_EXECUTOR_PROVIDER)
+    return serviceDefaultsMap.get(Java11SdkHttpConfigurationOption.REQUEST_EXECUTOR_PROVIDER)
         .executor();
   }
 
   // CONNECT TIMEOUT //////////////////////////////////////////////////////////
 
   private static Duration getConnectTimeout(AttributeMap serviceDefaultsMap) {
-    return serviceDefaultsMap.get(JavaHttpClientHttpConfigurationOption.CONNECTION_TIMEOUT);
+    return serviceDefaultsMap.get(Java11SdkHttpConfigurationOption.CONNECTION_TIMEOUT);
   }
 
   // VERSION //////////////////////////////////////////////////////////////////
@@ -327,7 +327,7 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
   private static HttpClient.Version getVersion(AttributeMap serviceDefaultsMap) {
     HttpClient.Version result;
 
-    Protocol protocol = serviceDefaultsMap.get(JavaHttpClientHttpConfigurationOption.PROTOCOL);
+    Protocol protocol = serviceDefaultsMap.get(Java11SdkHttpConfigurationOption.PROTOCOL);
     switch (protocol) {
       case HTTP1_1:
         result = HttpClient.Version.HTTP_1_1;
@@ -344,7 +344,7 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
   // SSL PARAMETERS ///////////////////////////////////////////////////////////
 
   private static SSLParameters getSslParameters(AttributeMap serviceDefaultsMap) {
-    return serviceDefaultsMap.get(JavaHttpClientHttpConfigurationOption.SSL_PARAMETERS);
+    return serviceDefaultsMap.get(Java11SdkHttpConfigurationOption.SSL_PARAMETERS);
   }
 
   // SSL CONTEXT ///////////////////////////////////////////////////////////////
@@ -358,17 +358,17 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
    */
   private SSLContext getSslContext(AttributeMap options) {
     Validate.isTrue(
-        options.get(JavaHttpClientHttpConfigurationOption.TLS_TRUST_MANAGERS_PROVIDER) == null
-            || !options.get(JavaHttpClientHttpConfigurationOption.TRUST_ALL_CERTIFICATES),
+        options.get(Java11SdkHttpConfigurationOption.TLS_TRUST_MANAGERS_PROVIDER) == null
+            || !options.get(Java11SdkHttpConfigurationOption.TRUST_ALL_CERTIFICATES),
         "A TlsTrustManagerProvider can't be provided if TrustAllCertificates is also set");
 
     TrustManager[] trustManagers = null;
-    if (options.get(JavaHttpClientHttpConfigurationOption.TLS_TRUST_MANAGERS_PROVIDER) != null) {
-      trustManagers = options.get(JavaHttpClientHttpConfigurationOption.TLS_TRUST_MANAGERS_PROVIDER)
+    if (options.get(Java11SdkHttpConfigurationOption.TLS_TRUST_MANAGERS_PROVIDER) != null) {
+      trustManagers = options.get(Java11SdkHttpConfigurationOption.TLS_TRUST_MANAGERS_PROVIDER)
           .trustManagers();
     }
 
-    if (options.get(JavaHttpClientHttpConfigurationOption.TRUST_ALL_CERTIFICATES)) {
+    if (options.get(Java11SdkHttpConfigurationOption.TRUST_ALL_CERTIFICATES)) {
       log.warn(() ->
           "SSL Certificate verification is disabled. This is not a safe setting and should only be "
               + "used for testing.");
@@ -376,7 +376,7 @@ public final class JavaHttpClientNioAsyncHttpClient implements SdkAsyncHttpClien
     }
 
     TlsKeyManagersProvider provider = options.get(
-        JavaHttpClientHttpConfigurationOption.TLS_KEY_MANAGERS_PROVIDER);
+        Java11SdkHttpConfigurationOption.TLS_KEY_MANAGERS_PROVIDER);
     KeyManager[] keyManagers = provider.keyManagers();
 
     SSLContext context;

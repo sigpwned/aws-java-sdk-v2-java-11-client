@@ -1,4 +1,4 @@
-package com.sigpwned.software.amazon.awssdk.http.nio.java;
+package com.sigpwned.software.amazon.awssdk.http.java11;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.any;
@@ -35,7 +35,6 @@ import java.util.concurrent.TimeoutException;
 import javax.net.ssl.SSLParameters;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -54,7 +53,7 @@ import software.amazon.awssdk.http.async.SdkHttpContentPublisher;
 public class JavaHttpClientNioAsyncHttpClientWireMockTest {
 
   private final RecordingNetworkTrafficListener wiremockTrafficListener = new RecordingNetworkTrafficListener();
-  private static SdkAsyncHttpClient client = JavaHttpClientNioAsyncHttpClient.builder().build();
+  private static SdkAsyncHttpClient client = Java11AsyncHttpClient.builder().build();
 
   @Rule
   public WireMockRule mockServer = new WireMockRule(wireMockConfig()
@@ -206,7 +205,7 @@ public class JavaHttpClientNioAsyncHttpClientWireMockTest {
   public void testConnectionTimeoutError() throws Exception {
     try {
       String expectedErrorMsg = "java.net.http.HttpConnectTimeoutException: HTTP connect timed out";
-      SdkAsyncHttpClient customClient = JavaHttpClientNioAsyncHttpClient.builder()
+      SdkAsyncHttpClient customClient = Java11AsyncHttpClient.builder()
           .connectionTimeout(Duration.ofMillis(1))
           .build();
 
@@ -225,8 +224,8 @@ public class JavaHttpClientNioAsyncHttpClientWireMockTest {
 
   @Test
   public void protocolChangedTest() {
-    JavaHttpClientNioAsyncHttpClient customClient = (JavaHttpClientNioAsyncHttpClient)
-        JavaHttpClientNioAsyncHttpClient.builder()
+    Java11AsyncHttpClient customClient = (Java11AsyncHttpClient)
+        Java11AsyncHttpClient.builder()
             .protocol(Protocol.HTTP2)
             .build();
     assertEquals(customClient.getHttpClient().version(), HttpClient.Version.HTTP_2);
@@ -242,8 +241,8 @@ public class JavaHttpClientNioAsyncHttpClientWireMockTest {
     sslParameters.setCipherSuites(cipherSuites);
     sslParameters.setApplicationProtocols(applicationProtocols);
 
-    JavaHttpClientNioAsyncHttpClient customClient = (JavaHttpClientNioAsyncHttpClient)
-        JavaHttpClientNioAsyncHttpClient.builder()
+    Java11AsyncHttpClient customClient = (Java11AsyncHttpClient)
+        Java11AsyncHttpClient.builder()
             .sslParameters(sslParameters)
             .build();
     SSLParameters testSslParameters = customClient.getHttpClient().sslParameters();
@@ -256,7 +255,7 @@ public class JavaHttpClientNioAsyncHttpClientWireMockTest {
   public void testResponseTimeoutError() throws Exception {
 
     String expectedErrorMsg = "java.net.http.HttpTimeoutException: request timed out";
-    SdkAsyncHttpClient customClient = JavaHttpClientNioAsyncHttpClient.builder()
+    SdkAsyncHttpClient customClient = Java11AsyncHttpClient.builder()
         .responseTimeout(Duration.ofMillis(500))
         .build();
 
