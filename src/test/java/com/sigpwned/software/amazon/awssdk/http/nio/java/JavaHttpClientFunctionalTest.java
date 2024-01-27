@@ -69,6 +69,9 @@ import software.amazon.awssdk.http.async.SimpleSubscriber;
  *     Various configuration parameters are honored, to the extent that the client allows and that
  *     the testing framework(s) AWS has standardized on allow
  *   </li>
+ *   <li>
+ *     Request bodies work with and without content-length headers
+ *   </li>
  * </ul>
  *
  * <p>
