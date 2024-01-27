@@ -88,6 +88,9 @@ import software.amazon.awssdk.http.async.SimpleSubscriber;
  */
 public class JavaHttpClientFunctionalTest {
 
+  /**
+   * Not currently used, but perhaps useful in the future.
+   */
   public static final RecordingNetworkTrafficListener wiremockTrafficListener = new RecordingNetworkTrafficListener();
 
   @Rule
