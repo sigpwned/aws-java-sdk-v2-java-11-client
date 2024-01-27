@@ -1,9 +1,12 @@
 package com.sigpwned.software.amazon.awssdk.http.nio.java.util;
 
 /**
- * Borrowed with love from Netty, which is released under Apache Source Code.
+ * Inspired by Netty
  */
-public class HttpHeaderValidationUtil {
+public final class MoreHttpHeaders {
+
+  private MoreHttpHeaders() {
+  }
 
   /**
    * Validate a header name.
@@ -11,8 +14,11 @@ public class HttpHeaderValidationUtil {
    * @param value the header value to validate
    * @return {@code -1} if the header value is valid, otherwise the index of the first invalid
    * character.
+   * @see <a
+   * href="https://github.com/netty/netty/blob/323f78ae7c6fcda0c5c62c20afa77a940fb2ee26/codec-http/src/main/java/io/netty/handler/codec/http/HttpHeaderValidationUtil.java#L143">
+   * https://github.com/netty/netty/blob/323f78ae7c6fcda0c5c62c20afa77a940fb2ee26/codec-http/src/main/java/io/netty/handler/codec/http/HttpHeaderValidationUtil.java#L143</a>
    */
-  public static boolean verifyValidHeaderValueCharSequence(CharSequence value) {
+  public static boolean isValidHeaderChars(CharSequence value) {
     // Validate value to field-content rule.
     //  field-content  = field-vchar [ 1*( SP / HTAB ) field-vchar ]
     //  field-vchar    = VCHAR / obs-text
@@ -23,10 +29,10 @@ public class HttpHeaderValidationUtil {
     //  See: https://datatracker.ietf.org/doc/html/rfc7230#section-3.2
     //  And: https://datatracker.ietf.org/doc/html/rfc5234#appendix-B.1
     // AWS also expects headers not to include newline or carriage returns.
-    return value.chars().allMatch(HttpHeaderValidationUtil::isValidChar);
+    return value.chars().allMatch(MoreHttpHeaders::isValidHeaderChar);
   }
 
-  public static boolean isValidChar(int ch) {
+  public static boolean isValidHeaderChar(int ch) {
     return (ch >= 0x20 && ch <= 0x7E) || ch == '\t';
   }
 }

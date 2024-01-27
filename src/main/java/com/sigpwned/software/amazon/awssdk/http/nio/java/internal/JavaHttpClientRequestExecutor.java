@@ -3,7 +3,7 @@ package com.sigpwned.software.amazon.awssdk.http.nio.java.internal;
 import static java.util.Objects.requireNonNull;
 
 import com.sigpwned.software.amazon.awssdk.http.nio.java.JavaHttpClientNioAsyncHttpClient;
-import com.sigpwned.software.amazon.awssdk.http.nio.java.util.HttpHeaderValidationUtil;
+import com.sigpwned.software.amazon.awssdk.http.nio.java.util.MoreHttpHeaders;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.http.HttpClient;
@@ -37,14 +37,14 @@ public class JavaHttpClientRequestExecutor {
     sdkRequest.request().headers().entrySet().stream()
         .flatMap(e -> e.getValue().stream().map(v -> Map.entry(e.getKey(), v)))
         .forEach(e -> {
-          if (!HttpHeaderValidationUtil.verifyValidHeaderValueCharSequence(e.getKey())) {
+          if (!MoreHttpHeaders.isValidHeaderChars(e.getKey())) {
             // We throw unusual exceptions here to pass test
             // SdkAsyncHttpClientH1TestSuite#naughtyHeaderCharactersDoNotGetToServer
             throw new UncheckedIOException(
                 new IOException("Invalid HTTP request",
                     new IllegalArgumentException("Request contains invalid header")));
           }
-          if (!HttpHeaderValidationUtil.verifyValidHeaderValueCharSequence(e.getValue())) {
+          if (!MoreHttpHeaders.isValidHeaderChars(e.getValue())) {
             // We throw unusual exceptions here to pass test
             // SdkAsyncHttpClientH1TestSuite#naughtyHeaderCharactersDoNotGetToServer
             throw new UncheckedIOException(
