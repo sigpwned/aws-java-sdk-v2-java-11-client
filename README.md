@@ -46,6 +46,15 @@ There are a few caveats about its usage as compared to other clients due to diff
 * There is a difference in behavior for canceled HTTP requests between Java 11 and Java 15, and Java 16 and later. Per [JDK-8245462](https://bugs.openjdk.org/browse/JDK-8245462), before Java 16, calling `CompletableFuture#cancel(boolean)` on the result of `execute()` does nothing, whereas starting with Java 16 it now attempts to cancel the request in-flight.
 * The client does not close connections after receiving 5XX responses from the server, which is technically part of the requirements for other HTTP clients.
 
+## Prior Art
+
+There are some other implementations using this same approach that were very useful in creating this implementation:
+
+* [@gabfssilva/aws-spi-java-11](https://github.com/gabfssilva/aws-spi-java-11)
+* [@rmcsoft/j11_aws_http_client](https://github.com/rmcsoft/j11_aws_http_client)
+
+They generally appear to be abandoned, which is why I created this project.
+
 ## Help Wanted
 
 So you want to help, huh? Outstanding!
