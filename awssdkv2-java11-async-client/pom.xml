@@ -9,7 +9,7 @@
     <version>2.23.7.0-b0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>java-11-async-client</artifactId>
+  <artifactId>awssdkv2-java11-async-client</artifactId>
   <name>AWS Java SDK :: HTTP Clients :: Java 11 Async HTTP Clients</name>
   <packaging>jar</packaging>
 
