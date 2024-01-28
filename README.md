@@ -1,10 +1,22 @@
-# aws-java-sdk-v2-java-11-client [![tests](https://github.com/sigpwned/aws-java-sdk-v2-java-11-client/actions/workflows/integration.yml/badge.svg)](https://github.com/sigpwned/aws-java-sdk-v2-java-11-client/actions/workflows/integration.yml)
+# aws-java-sdk-v2-java-11-client [![tests](https://github.com/sigpwned/aws-java-sdk-v2-java-11-client/actions/workflows/integration.yml/badge.svg)](https://github.com/sigpwned/aws-java-sdk-v2-java-11-client/actions/workflows/integration.yml) ![Maven Central](https://img.shields.io/maven-central/v/:groupId/:artifactId)
 
 An implementation of the [AWS Java SDK v2 HTTP Client SPI](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/http-configuration.html) using [the Java 11 HttpClient](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.html).
 
 It was pulled from the [@aws/aws-java-sdk-v2](https://github.com/aws/aws-sdk-java-v2) [java-11-http-client](https://github.com/aws/aws-sdk-java-v2/tree/java-11-http-client) branch.
 
 It is very much a work in progress. Help, feedback, and PRs are all welcome and (greatly) appreciated!
+
+## Getting started
+
+To include the asynchronous client in your code, simply add the following Maven dependency:
+
+```xml
+    <dependency>
+        <groupId>com.sigpwned</groupId>
+        <artifactId>awssdkv2-java11-async-client<</artifactId>
+        <version>2.37.7.0-b0</version>
+    </depenency>
+```
 
 ## Background
 
