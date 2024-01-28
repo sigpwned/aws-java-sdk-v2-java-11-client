@@ -9,7 +9,7 @@
     <version>2.23.7</version>
   </parent>
 
-  <artifactId>java-nio-client</artifactId>
+  <artifactId>java-11-async-client</artifactId>
   <name>AWS Java SDK :: HTTP Clients :: Java 11 Async HTTP Clients</name>
   <packaging>jar</packaging>
 
@@ -82,19 +82,7 @@
     </dependency>
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
-      <artifactId>s3</artifactId>
-      <version>${awsjavasdk.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>software.amazon.awssdk</groupId>
       <artifactId>regions</artifactId>
-      <version>${awsjavasdk.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>software.amazon.awssdk</groupId>
-      <artifactId>transcribestreaming</artifactId>
       <version>${awsjavasdk.version}</version>
       <scope>test</scope>
     </dependency>
@@ -105,20 +93,31 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>software.amazon.awssdk</groupId>
-      <artifactId>kinesis</artifactId>
+      <artifactId>sqs</artifactId>
       <version>${awsjavasdk.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>localstack</artifactId>
+      <version>1.19.4</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${maven-failsafe-plugin.version}</version>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>

@@ -22,8 +22,10 @@
   </organization>
 
   <scm>
-    <connection>scm:git:ssh://git@github.com/sigpwned/aws-java-sdk-v2-java-11-client.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/sigpwned/aws-java-sdk-v2-java-11-client.git</developerConnection>
+    <connection>scm:git:ssh://git@github.com/sigpwned/aws-java-sdk-v2-java-11-client.git
+    </connection>
+    <developerConnection>scm:git:ssh://git@github.com/sigpwned/aws-java-sdk-v2-java-11-client.git
+    </developerConnection>
     <url>https://github.com/sigpwned/aws-java-sdk-v2-java-11-client/tree/main</url>
   </scm>
 
@@ -65,8 +67,39 @@
   </properties>
 
   <build>
+    <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
     <pluginManagement>
       <plugins>
+        <!-- Let's run integration tests, shall we? -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${maven-failsafe-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>integration-test</id>
+              <phase>integration-test</phase>
+              <goals>
+                <goal>integration-test</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>verify</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>verify</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <includes>
+              <include>**/*IT.java</include>
+            </includes>
+            <excludes>
+              <exclude>**/*Test.java</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
         <!-- Disabling because a component is not found, software.amazon.awssdk:build-tools:1.0 -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
