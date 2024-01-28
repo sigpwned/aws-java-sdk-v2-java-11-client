@@ -58,7 +58,7 @@ There are a few caveats about its usage as compared to other clients due to diff
 * There is no support for read and write timeouts, per [JDK-8258397](https://bugs.openjdk.org/browse/JDK-8258397). Rather, the client can be configured to use a request timeout, which limits how long the client waits until HTTP response headers are received, but that's it.
 * Proxy authentication is not supported out of the box. Per [JDK-8229962](https://bugs.openjdk.org/browse/JDK-8229962), configuring proxy authentication on `HttpClient` requires providing some process-level configuration parameters up front, so proxy authentication is [up to the user](https://stackoverflow.com/a/60170227/2103602), at least for now.
 * There is a difference in behavior for canceled HTTP requests between Java 11 and Java 15, and Java 16 and later. Per [JDK-8245462](https://bugs.openjdk.org/browse/JDK-8245462), before Java 16, calling `CompletableFuture#cancel(boolean)` on the result of `execute()` does nothing, whereas starting with Java 16 it now attempts to cancel the request in-flight.
-* The client does not close connections after receiving 5XX responses from the server, which is technically part of the requirements for other HTTP clients.
+* The client does not close connections after receiving 5XX responses from the server, which is technically part of the requirements for other HTTP clients. The reason for the requirement is not documented, so it's not clear what negative effect(s) this difference will have in practice, if any.
 * There may be some slight differences in how `Expect: 100-continue`  is handled versus other clients.
 
 ## Prior Art
@@ -72,8 +72,6 @@ They generally appear to be abandoned, which is why I created this project.
 
 ## Help Wanted
 
-So you want to help, huh? Outstanding!
-
-The most important work happening right now is determining the list of tests required for the asynchronous client. Please check out [#2](https://github.com/sigpwned/aws-java-sdk-v2-java-nio-client/issues/2) for instructions on how to contribute.
+All feedback -- even if it's just "I tried it, and it worked" -- is welcome, appreciated, and useful! Issues and PRs are even better.
 
 Naturally, all helpers will be added to the [contributors](https://github.com/sigpwned/aws-java-sdk-v2-java-nio-client/blob/main/CONTRIBUTORS.md).
