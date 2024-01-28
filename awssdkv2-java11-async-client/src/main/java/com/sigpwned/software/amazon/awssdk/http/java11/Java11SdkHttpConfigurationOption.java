@@ -1,6 +1,5 @@
 package com.sigpwned.software.amazon.awssdk.http.java11;
 
-import com.sigpwned.software.amazon.awssdk.http.ExecutorProvider;
 import java.time.Duration;
 import javax.net.ssl.SSLParameters;
 import software.amazon.awssdk.annotations.SdkProtectedApi;
@@ -72,13 +71,22 @@ public final class Java11SdkHttpConfigurationOption<T> extends AttributeMap.Key<
   public static final Java11SdkHttpConfigurationOption<ExecutorProvider> REQUEST_EXECUTOR_PROVIDER = new Java11SdkHttpConfigurationOption<>(
       "RequestExecutorProvider", ExecutorProvider.class);
 
+  /**
+   * Proxy server configuration
+   */
+  public static final Java11SdkHttpConfigurationOption<ProxyConfiguration> PROXY_CONFIGURATION = new Java11SdkHttpConfigurationOption<>(
+      "ProxyConfiguration", ProxyConfiguration.class);
+
   private static final SSLParameters DEFAULT_SSL_PARAMETERS = new SSLParameters();
   private static final Duration DEFAULT_RESPONSE_TIMEOUT = Duration.ofSeconds(30);
   private static final ExecutorProvider DEFAULT_REQUEST_EXECUTOR_PROVIDER = () -> null;
+  private static final ProxyConfiguration DEFAULT_PROXY_CONFIGURATION = ProxyConfiguration.builder()
+      .build();
 
   public static final AttributeMap GLOBAL_HTTP_DEFAULTS = AttributeMap.builder()
       .put(SSL_PARAMETERS, DEFAULT_SSL_PARAMETERS).put(RESPONSE_TIMEOUT, DEFAULT_RESPONSE_TIMEOUT)
-      .put(REQUEST_EXECUTOR_PROVIDER, DEFAULT_REQUEST_EXECUTOR_PROVIDER).build()
+      .put(REQUEST_EXECUTOR_PROVIDER, DEFAULT_REQUEST_EXECUTOR_PROVIDER)
+      .put(PROXY_CONFIGURATION, DEFAULT_PROXY_CONFIGURATION).build()
       .merge(SdkHttpConfigurationOption.GLOBAL_HTTP_DEFAULTS);
 
   private final String name;

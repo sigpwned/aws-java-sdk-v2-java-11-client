@@ -86,7 +86,7 @@ import software.amazon.awssdk.http.async.SimpleSubscriber;
  * handles those cases.
  * </p>
  */
-public class JavaHttpClientFunctionalTest {
+public class Java11AsyncHttpClientWireMockTest {
 
   /**
    * Not currently used, but perhaps useful in the future.

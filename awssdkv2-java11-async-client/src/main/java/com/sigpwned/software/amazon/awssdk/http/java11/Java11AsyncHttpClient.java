@@ -1,14 +1,24 @@
 package com.sigpwned.software.amazon.awssdk.http.java11;
 
-import com.sigpwned.software.amazon.awssdk.http.ExecutorProvider;
+import static java.util.Collections.*;
+import static java.util.Objects.requireNonNull;
+
 import com.sigpwned.software.amazon.awssdk.http.java11.internal.JavaHttpClientRequestExecutor;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.ProxySelector;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.time.Duration;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import javax.net.ssl.KeyManager;
@@ -37,7 +47,7 @@ public final class Java11AsyncHttpClient implements SdkAsyncHttpClient {
 
   private static final Logger log = Logger.loggerFor(Java11AsyncHttpClient.class);
 
-  private static final String CLIENT_NAME = "JavaNio";
+  private static final String CLIENT_NAME = "Java11";
 
   public static Builder builder() {
     return new DefaultBuilder();
@@ -51,8 +61,7 @@ public final class Java11AsyncHttpClient implements SdkAsyncHttpClient {
 
   private final AttributeMap serviceDefaultsMap;
 
-  private Java11AsyncHttpClient(DefaultBuilder builder,
-      AttributeMap serviceDefaultsMap) {
+  private Java11AsyncHttpClient(DefaultBuilder builder, AttributeMap serviceDefaultsMap) {
     /*this.configuration = new JavaHttpClientConfiguration(serviceDefaultsMap);*/
 
     Duration connectTimeout = getConnectTimeout(serviceDefaultsMap);
@@ -60,10 +69,11 @@ public final class Java11AsyncHttpClient implements SdkAsyncHttpClient {
     SSLParameters sslParameters = getSslParameters(serviceDefaultsMap);
     SSLContext sslContext = getSslContext(serviceDefaultsMap);
     Executor requestExecutor = getRequestExecutor(serviceDefaultsMap);
+    ProxySelector proxySelector = getProxySelector(serviceDefaultsMap);
 
     HttpClient.Builder javaHttpClientBuilder = HttpClient.newBuilder()
         .connectTimeout(connectTimeout).version(version).sslParameters(sslParameters)
-        .sslContext(sslContext);
+        .proxy(proxySelector).sslContext(sslContext);
     if (requestExecutor != null) {
       // According to the docs, it's important not even to call executor() if we want to use the
       // default behavior. It's not enough just to give null.
@@ -181,6 +191,13 @@ public final class Java11AsyncHttpClient implements SdkAsyncHttpClient {
      */
     Builder tlsKeyManagersProvider(TlsKeyManagersProvider tlsKeyManagersProvider);
 
+    /**
+     * Sets the {@link ProxyConfiguration} that will be used by the HTTP client.
+     *
+     * @param proxyConfiguration
+     * @return
+     */
+    Builder proxyConfiguration(ProxyConfiguration proxyConfiguration);
   }
 
   private static final class DefaultBuilder implements Builder {
@@ -193,8 +210,7 @@ public final class Java11AsyncHttpClient implements SdkAsyncHttpClient {
     @Override
     public Builder connectionTimeout(Duration connectionTimeout) {
       Validate.isPositive(connectionTimeout, "connectionTimeout");
-      standardOptions.put(Java11SdkHttpConfigurationOption.CONNECTION_TIMEOUT,
-          connectionTimeout);
+      standardOptions.put(Java11SdkHttpConfigurationOption.CONNECTION_TIMEOUT, connectionTimeout);
       return this;
     }
 
@@ -298,10 +314,19 @@ public final class Java11AsyncHttpClient implements SdkAsyncHttpClient {
     }
 
     @Override
+    public Builder proxyConfiguration(ProxyConfiguration proxyConfiguration) {
+      standardOptions.put(Java11SdkHttpConfigurationOption.PROXY_CONFIGURATION, proxyConfiguration);
+      return this;
+    }
+
+    public void setProxyConfiguration(ProxyConfiguration proxyConfiguration) {
+      proxyConfiguration(proxyConfiguration);
+    }
+
+    @Override
     public SdkAsyncHttpClient buildWithDefaults(AttributeMap serviceDefaults) {
-      return new Java11AsyncHttpClient(this,
-          standardOptions.build().merge(serviceDefaults)
-              .merge(Java11SdkHttpConfigurationOption.GLOBAL_HTTP_DEFAULTS));
+      return new Java11AsyncHttpClient(this, standardOptions.build().merge(serviceDefaults)
+          .merge(Java11SdkHttpConfigurationOption.GLOBAL_HTTP_DEFAULTS));
     }
   }
 
@@ -314,6 +339,39 @@ public final class Java11AsyncHttpClient implements SdkAsyncHttpClient {
   private static Executor getRequestExecutor(AttributeMap serviceDefaultsMap) {
     return serviceDefaultsMap.get(Java11SdkHttpConfigurationOption.REQUEST_EXECUTOR_PROVIDER)
         .executor();
+  }
+
+  // PROXY CONFIGURATION ///////////////////////////////////////////////////////
+  private static ProxySelector getProxySelector(AttributeMap serviceDefaultsMap) {
+    ProxyConfiguration proxyConfiguration = serviceDefaultsMap.get(
+        Java11SdkHttpConfigurationOption.PROXY_CONFIGURATION);
+    if (proxyConfiguration == null || proxyConfiguration.host() == null) {
+      return ProxySelector.getDefault();
+    }
+    return new DefaultProxySelector(new Proxy(Proxy.Type.HTTP,
+        InetSocketAddress.createUnresolved(proxyConfiguration.host(), proxyConfiguration.port())),
+        proxyConfiguration.nonProxyHosts());
+  }
+
+  private static class DefaultProxySelector extends ProxySelector {
+
+    private final Proxy proxy;
+    private final Set<String> nonProxyHosts;
+
+    public DefaultProxySelector(Proxy proxy, Set<String> nonProxyHosts) {
+      this.proxy = requireNonNull(proxy);
+      this.nonProxyHosts = unmodifiableSet(nonProxyHosts);
+    }
+
+    @Override
+    public List<Proxy> select(URI uri) {
+      return singletonList(nonProxyHosts.contains(uri.getHost()) ? Proxy.NO_PROXY : proxy);
+    }
+
+    @Override
+    public void connectFailed(URI uri, SocketAddress address, IOException e) {
+      log.warn(() -> "Failed to connect to proxy " + address, e);
+    }
   }
 
   // CONNECT TIMEOUT //////////////////////////////////////////////////////////

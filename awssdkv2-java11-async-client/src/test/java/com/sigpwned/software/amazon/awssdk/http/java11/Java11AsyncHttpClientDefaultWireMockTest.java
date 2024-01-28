@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import software.amazon.awssdk.http.SdkAsyncHttpClientH1TestSuite;
 import software.amazon.awssdk.http.async.SdkAsyncHttpClient;
 
-public class JavaHttpClientDefaultWireMockTest extends SdkAsyncHttpClientH1TestSuite {
+public class Java11AsyncHttpClientDefaultWireMockTest extends SdkAsyncHttpClientH1TestSuite {
 
   @Override
   protected SdkAsyncHttpClient setupClient() {
