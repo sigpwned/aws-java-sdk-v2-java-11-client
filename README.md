@@ -1,4 +1,4 @@
-# aws-java-sdk-v2-java-11-client [![tests](https://github.com/sigpwned/aws-java-sdk-v2-java-11-client/actions/workflows/integration.yml/badge.svg)](https://github.com/sigpwned/aws-java-sdk-v2-java-11-client/actions/workflows/integration.yml) ![Maven Central](https://img.shields.io/maven-central/v/:groupId/:artifactId)
+# aws-java-sdk-v2-java-11-client [![tests](https://github.com/sigpwned/aws-java-sdk-v2-java-11-client/actions/workflows/integration.yml/badge.svg)](https://github.com/sigpwned/aws-java-sdk-v2-java-11-client/actions/workflows/integration.yml) ![Maven Central](https://img.shields.io/maven-central/v/com.sigpwned/awssdkv2-java11-async-client)
 
 An implementation of the [AWS Java SDK v2 HTTP Client SPI](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/http-configuration.html) using [the Java 11 HttpClient](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.html).
 
