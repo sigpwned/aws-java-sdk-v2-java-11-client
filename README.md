@@ -23,6 +23,8 @@ But they've also given us the tools to build such a client ourselves. This proje
 
 More information about the "official" Amazon implementations is available [here](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/http-configuration.html).
 
+Integration tests against live or mock services remain a work-in-progress.
+
 ### Asynchronous
 
 The `awssdkv2-java11-async-client` is an asynchronous implementation of the `SdkAsyncHttpClient` asynchronous HTTP client SPI from the AWS Java SDK v2. You can compare it to the two asynchronous clients Amazon currently supports for that library:
@@ -45,6 +47,7 @@ There are a few caveats about its usage as compared to other clients due to diff
 * Proxy authentication is not supported out of the box. Per [JDK-8229962](https://bugs.openjdk.org/browse/JDK-8229962), configuring proxy authentication on `HttpClient` requires providing some process-level configuration parameters up front, so proxy authentication is [up to the user](https://stackoverflow.com/a/60170227/2103602), at least for now.
 * There is a difference in behavior for canceled HTTP requests between Java 11 and Java 15, and Java 16 and later. Per [JDK-8245462](https://bugs.openjdk.org/browse/JDK-8245462), before Java 16, calling `CompletableFuture#cancel(boolean)` on the result of `execute()` does nothing, whereas starting with Java 16 it now attempts to cancel the request in-flight.
 * The client does not close connections after receiving 5XX responses from the server, which is technically part of the requirements for other HTTP clients.
+* There may be some slight differences in how `Expect: 100-continue`  is handled versus other clients.
 
 ## Prior Art
 
