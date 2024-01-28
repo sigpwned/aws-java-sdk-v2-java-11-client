@@ -30,7 +30,6 @@ import java.net.http.HttpTimeoutException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -952,69 +951,4 @@ public class Java11AsyncHttpClientWireMockTest {
   }
 
 
-  /**
-   * A simple implementation of a {@link SdkHttpContentPublisher} that publishes a single
-   * {@link ByteBuffer} and completes.
-   *
-   * @see software.amazon.awssdk.core.internal.http.async.SimpleHttpContentPublisher
-   */
-  private static class SimpleSdkHttpContentPublisher implements SdkHttpContentPublisher {
-
-    private final byte[] content;
-
-    private final boolean hasContentLength;
-
-    public SimpleSdkHttpContentPublisher(byte[] content) {
-      this(content, true);
-    }
-
-    public SimpleSdkHttpContentPublisher(byte[] content, boolean hasContentLength) {
-      this.content = requireNonNull(content);
-      this.hasContentLength = hasContentLength;
-    }
-
-    @Override
-    public void subscribe(Subscriber<? super ByteBuffer> subscriber) {
-      subscriber.onSubscribe(new SimpleSubscription(subscriber, content));
-    }
-
-    @Override
-    public Optional<Long> contentLength() {
-      return hasContentLength ? Optional.of((long) content.length) : Optional.empty();
-    }
-  }
-
-  /**
-   * A simple implementation of a {@link Subscription} that publishes a single {@link ByteBuffer}
-   * and completes. This is used to publish the content of a {@link SdkHttpContentPublisher}. Ripped
-   * from {@link software.amazon.awssdk.core.internal.http.async.SimpleHttpContentPublisher}.
-   */
-  private static class SimpleSubscription implements Subscription {
-
-    private final Subscriber<? super ByteBuffer> subscriber;
-    private final byte[] content;
-    private boolean running;
-
-    private SimpleSubscription(Subscriber<? super ByteBuffer> subscriber, byte[] content) {
-      this.subscriber = requireNonNull(subscriber);
-      this.content = requireNonNull(content);
-      this.running = true;
-    }
-
-    public void request(long n) {
-      if (running) {
-        running = false;
-        if (n <= 0L) {
-          subscriber.onError(new IllegalArgumentException("Demand must be positive"));
-        } else {
-          subscriber.onNext(ByteBuffer.wrap(content));
-          subscriber.onComplete();
-        }
-      }
-    }
-
-    public void cancel() {
-      this.running = false;
-    }
-  }
 }
