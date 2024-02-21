@@ -15,12 +15,14 @@ import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.reactivestreams.Publisher;
@@ -245,7 +247,7 @@ public class Expect100ContinueTest {
       throws IOException {
     final AtomicReference<SdkHttpResponse> responseBuffer = new AtomicReference<>();
     final ByteArrayOutputStream bodyBuffer = new ByteArrayOutputStream();
-    final URI serverUri=server.uri();
+    final URI serverUri = server.uri();
 
     try {
       SdkHttpRequest.Builder requestBuilder = SdkHttpRequest.builder()
@@ -321,6 +323,15 @@ public class Expect100ContinueTest {
     public EmbeddedServer(Handler handler) throws Exception {
       server = new Server(0);
       server.setHandler(handler);
+      server.setErrorHandler(new ErrorHandler() {
+        @Override
+        public void handle(String target, Request baseRequest, HttpServletRequest request,
+            HttpServletResponse response) throws IOException, ServletException {
+          System.err.println("error handler");
+          System.err.println(target);
+          super.handle(target, baseRequest, request, response);
+        }
+      });
       server.start();
     }
 
@@ -330,6 +341,7 @@ public class Expect100ContinueTest {
 
     @Override
     public void close() {
+      System.err.println("EmbeddedServer#close");
       try {
         server.stop();
       } catch (Exception e) {
