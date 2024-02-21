@@ -15,7 +15,7 @@ To include the asynchronous client in your code, simply add the following Maven 
         <groupId>com.sigpwned</groupId>
         <artifactId>awssdkv2-java11-async-client</artifactId>
         <version>2.37.7.0-b0</version>
-    </depenency>
+    </dependency>
 ```
 
 ## Background
