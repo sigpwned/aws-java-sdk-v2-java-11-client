@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.UncheckedIOException;
 import java.net.URI;
+import java.net.http.HttpConnectTimeoutException;
 import java.nio.ByteBuffer;
+import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +51,7 @@ public class Expect100ContinueTest {
       }
     };
 
-    try (SdkAsyncHttpClient client = Java11AsyncHttpClient.create();
+    try (SdkAsyncHttpClient client = createClient();
         EmbeddedServer server = new EmbeddedServer(handler)) {
       HttpExecuteResponse response = sendRequest(client, server);
       assertThat(response.httpResponse().statusCode()).isEqualTo(200);
@@ -70,7 +72,7 @@ public class Expect100ContinueTest {
       }
     };
 
-    try (SdkAsyncHttpClient client = Java11AsyncHttpClient.create();
+    try (SdkAsyncHttpClient client = createClient();
         EmbeddedServer server = new EmbeddedServer(handler)) {
       HttpExecuteResponse response = sendRequest(client, server);
       assertThat(response.httpResponse().statusCode()).isEqualTo(204);
@@ -91,7 +93,7 @@ public class Expect100ContinueTest {
       }
     };
 
-    try (SdkAsyncHttpClient client = Java11AsyncHttpClient.create();
+    try (SdkAsyncHttpClient client = createClient();
         EmbeddedServer server = new EmbeddedServer(handler)) {
       HttpExecuteResponse response = sendRequest(client, server);
       assertThat(response.httpResponse().statusCode()).isEqualTo(304);
@@ -112,7 +114,7 @@ public class Expect100ContinueTest {
       }
     };
 
-    try (SdkAsyncHttpClient client = Java11AsyncHttpClient.create();
+    try (SdkAsyncHttpClient client = createClient();
         EmbeddedServer server = new EmbeddedServer(handler)) {
       HttpExecuteResponse response = sendRequest(client, server);
       assertThat(response.httpResponse().statusCode()).isEqualTo(417);
@@ -134,7 +136,7 @@ public class Expect100ContinueTest {
       }
     };
 
-    try (SdkAsyncHttpClient client = Java11AsyncHttpClient.create();
+    try (SdkAsyncHttpClient client = createClient();
         EmbeddedServer server = new EmbeddedServer(handler)) {
       HttpExecuteResponse response = sendRequest(client, server);
       assertThat(response.httpResponse().statusCode()).isEqualTo(500);
@@ -158,7 +160,7 @@ public class Expect100ContinueTest {
       }
     };
 
-    try (SdkAsyncHttpClient client = Java11AsyncHttpClient.create();
+    try (SdkAsyncHttpClient client = createClient();
         EmbeddedServer server = new EmbeddedServer(handler)) {
       HttpExecuteResponse response = sendRequest(client, server);
       assertThat(response.httpResponse().statusCode()).isEqualTo(500);
@@ -182,7 +184,7 @@ public class Expect100ContinueTest {
       }
     };
 
-    try (SdkAsyncHttpClient client = Java11AsyncHttpClient.create();
+    try (SdkAsyncHttpClient client = createClient();
         EmbeddedServer server = new EmbeddedServer(handler)) {
       HttpExecuteResponse response = sendRequest(client, server);
       assertThat(response.httpResponse().statusCode()).isEqualTo(400);
@@ -203,7 +205,7 @@ public class Expect100ContinueTest {
       }
     };
 
-    try (SdkAsyncHttpClient client = Java11AsyncHttpClient.create();
+    try (SdkAsyncHttpClient client = createClient();
         EmbeddedServer server = new EmbeddedServer(handler)) {
       assertThatThrownBy(() -> sendRequest(client, server, true)).isInstanceOf(
           IOException.class);
@@ -226,7 +228,7 @@ public class Expect100ContinueTest {
       }
     };
 
-    try (SdkAsyncHttpClient client = Java11AsyncHttpClient.create();
+    try (SdkAsyncHttpClient client = createClient();
         EmbeddedServer server = new EmbeddedServer(handler)) {
       assertThatThrownBy(() -> sendRequest(client, server, true)).isInstanceOf(
           UncheckedIOException.class);
@@ -243,10 +245,11 @@ public class Expect100ContinueTest {
       throws IOException {
     final AtomicReference<SdkHttpResponse> responseBuffer = new AtomicReference<>();
     final ByteArrayOutputStream bodyBuffer = new ByteArrayOutputStream();
+    final URI serverUri=server.uri();
 
     try {
       SdkHttpRequest.Builder requestBuilder = SdkHttpRequest.builder()
-          .uri(server.uri())
+          .uri(serverUri)
           .putHeader("Expect", "100-continue")
           .method(SdkHttpMethod.PUT);
       client.execute(AsyncExecuteRequest.builder()
@@ -283,7 +286,12 @@ public class Expect100ContinueTest {
       throw new InterruptedIOException();
     } catch (ExecutionException e) {
       Throwable cause = e.getCause();
-      if (cause instanceof IOException) {
+      if (cause instanceof HttpConnectTimeoutException) {
+        e.printStackTrace(System.err);
+        System.err.println(serverUri);
+        System.err.println(server.uri());
+        throw (HttpConnectTimeoutException) cause;
+      } else if (cause instanceof IOException) {
         throw (IOException) cause;
       } else if (cause instanceof RuntimeException) {
         throw (RuntimeException) cause;
@@ -296,6 +304,12 @@ public class Expect100ContinueTest {
         .response(responseBuffer.get())
         .responseBody(
             AbortableInputStream.create(new ByteArrayInputStream(bodyBuffer.toByteArray())))
+        .build();
+  }
+
+  private SdkAsyncHttpClient createClient() {
+    return Java11AsyncHttpClient.builder()
+        .connectionTimeout(Duration.ofSeconds(5L))
         .build();
   }
 
