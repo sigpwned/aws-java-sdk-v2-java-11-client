@@ -3,6 +3,7 @@
 ## Special thanks for all the people who had helped this project so far:
 
 * [sigpwned](https://github.com/sigpwned) (Founder)
+* [msailes](https://github.com/msailes)
 
 ## Special thanks to everyone who participated in the initial implementation in the AWS Java SDK v2 repo:
 
