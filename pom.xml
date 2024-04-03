@@ -62,7 +62,7 @@
   </issueManagement>
 
   <properties>
-    <awsjavasdk.version>2.23.7</awsjavasdk.version>
+    <awsjavasdk.version>2.25.23</awsjavasdk.version>
     <jre.version>11</jre.version>
     <dependency.skip>true</dependency.skip>
     <maven.compiler.release>${jre.version}</maven.compiler.release>
