@@ -1,229 +1,245 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>software.amazon.awssdk</groupId>
-    <artifactId>http-clients</artifactId>
-    <version>2.23.7</version>
-  </parent>
-
-  <groupId>com.sigpwned</groupId>
-  <artifactId>awssdkv2-java11-clients</artifactId>
-  <version>2.23.7.0-b1-SNAPSHOT</version>
-  <name>AWS Java SDK :: HTTP Clients :: Java 11 HTTP Clients</name>
-  <packaging>pom</packaging>
-  <inceptionYear>2024</inceptionYear>
-  <url>https://github.com/sigpwned/aws-java-sdk-v2-java-11-client</url>
-
-  <organization>
-    <name>Andy Boothe</name>
-    <url>https://www.sigpwned.com/</url>
-  </organization>
-
-  <scm>
-    <connection>scm:git:ssh://git@github.com/sigpwned/aws-java-sdk-v2-java-11-client.git
-    </connection>
-    <developerConnection>scm:git:ssh://git@github.com/sigpwned/aws-java-sdk-v2-java-11-client.git
-    </developerConnection>
-    <url>https://github.com/sigpwned/aws-java-sdk-v2-java-11-client/tree/main</url>
-    <tag>HEAD</tag>
-  </scm>
-
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
-
-  <developers>
-    <developer>
-      <name>Andy Boothe</name>
-      <email>andy.boothe@gmail.com</email>
-    </developer>
-  </developers>
-
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <name>Sonatype Nexus Snapshots</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <name>Nexus Release Repository</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-  </distributionManagement>
-
-  <issueManagement>
-    <system>GitHub</system>
-    <url>https://github.com/sigpwned/aws-java-sdk-v2-java-11-client</url>
-  </issueManagement>
-
-  <properties>
-    <awsjavasdk.version>2.23.7</awsjavasdk.version>
-    <jre.version>11</jre.version>
-    <dependency.skip>true</dependency.skip>
-    <maven.compiler.release>${jre.version}</maven.compiler.release>
-  </properties>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
+    <parent>
         <groupId>software.amazon.awssdk</groupId>
-        <artifactId>bom-internal</artifactId>
-        <version>${awsjavasdk.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+        <artifactId>http-clients</artifactId>
+        <version>2.23.7</version>
+    </parent>
 
-  <build>
-    <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
-    <pluginManagement>
-      <plugins>
-        <!-- Let's run integration tests, shall we? -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <version>${maven-failsafe-plugin.version}</version>
-          <executions>
-            <execution>
-              <id>integration-test</id>
-              <phase>integration-test</phase>
-              <goals>
-                <goal>integration-test</goal>
-              </goals>
-            </execution>
-            <execution>
-              <id>verify</id>
-              <phase>verify</phase>
-              <goals>
-                <goal>verify</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <includes>
-              <include>**/*IT.java</include>
-            </includes>
-            <excludes>
-              <exclude>**/*Test.java</exclude>
-            </excludes>
-          </configuration>
-        </plugin>
-        <!-- Disabling because a component is not found, software.amazon.awssdk:build-tools:1.0 -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>${maven-checkstyle-plugin.version}</version>
-          <executions>
-            <execution>
-              <id>checkstyle</id>
-              <phase>none</phase>
-            </execution>
-          </executions>
-        </plugin>
-        <!-- Disabling because a component is not found, software.amazon.awssdk:build-tools:1.0 -->
-        <plugin>
-          <groupId>com.github.spotbugs</groupId>
-          <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>${spotbugs.version}</version>
-          <executions>
-            <execution>
-              <id>findbugs</id>
-              <phase>none</phase>
-            </execution>
-          </executions>
-        </plugin>
-        <!-- Disabling because it does not support analyzing Java 11 compiled classes -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-dependency-plugin</artifactId>
-          <version>${maven-dependency-plugin.version}</version>
-          <configuration>
-            <skip>${dependency.skip}</skip>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
+    <groupId>com.sigpwned</groupId>
+    <artifactId>awssdkv2-java11-clients</artifactId>
+    <version>2.26.9.0-b0-SNAPSHOT</version>
+    <name>AWS Java SDK :: HTTP Clients :: Java 11 HTTP Clients</name>
+    <packaging>pom</packaging>
+    <inceptionYear>2024</inceptionYear>
+    <url>https://github.com/sigpwned/aws-java-sdk-v2-java-11-client</url>
 
-  <modules>
-    <module>awssdkv2-java11-async-client</module>
-  </modules>
+    <organization>
+        <name>Andy Boothe</name>
+        <url>https://www.sigpwned.com/</url>
+    </organization>
 
-  <!-- For releasing to maven central -->
-  <profiles>
-    <profile>
-      <id>release</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar-no-fork</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-                <configuration>
-                  <failOnError>false</failOnError>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-release-plugin</artifactId>
-            <configuration>
-              <tagNameFormat>v@{project.version}</tagNameFormat>
-              <autoVersionSubmodules>true</autoVersionSubmodules>
-              <useReleaseProfile>false</useReleaseProfile>
-              <releaseProfiles>release</releaseProfiles>
-              <goals>deploy</goals>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <extensions>true</extensions>
-            <configuration>
-              <serverId>ossrh</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+    <scm>
+        <connection>
+            scm:git:ssh://git@github.com/sigpwned/aws-java-sdk-v2-java-11-client.git
+        </connection>
+        <developerConnection>
+            scm:git:ssh://git@github.com/sigpwned/aws-java-sdk-v2-java-11-client.git
+        </developerConnection>
+        <url>
+            https://github.com/sigpwned/aws-java-sdk-v2-java-11-client/tree/main</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Andy Boothe</name>
+            <email>andy.boothe@gmail.com</email>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <name>Nexus Release Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/sigpwned/aws-java-sdk-v2-java-11-client</url>
+    </issueManagement>
+
+    <properties>
+        <awsjavasdk.version>2.26.9</awsjavasdk.version>
+        <testcontainers.version>1.20.1</testcontainers.version>
+        <jre.version>11</jre.version>
+        <dependency.skip>true</dependency.skip>
+        <maven.compiler.release>${jre.version}</maven.compiler.release>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom-internal</artifactId>
+                <version>${awsjavasdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${testcontainers.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
+        <pluginManagement>
+            <plugins>
+                <!-- Let's run integration tests, shall we? -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven-failsafe-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>integration-test</id>
+                            <phase>integration-test</phase>
+                            <goals>
+                                <goal>integration-test</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>verify</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <includes>
+                            <include>**/*IT.java</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/*Test.java</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+                <!-- Disabling because a component is not found,
+                software.amazon.awssdk:build-tools:1.0 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${maven-checkstyle-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>checkstyle</id>
+                            <phase>none</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- Disabling because a component is not found,
+                software.amazon.awssdk:build-tools:1.0 -->
+                <plugin>
+                    <groupId>com.github.spotbugs</groupId>
+                    <artifactId>spotbugs-maven-plugin</artifactId>
+                    <version>${spotbugs.version}</version>
+                    <executions>
+                        <execution>
+                            <id>findbugs</id>
+                            <phase>none</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- Disabling because it does not support analyzing Java 11
+                compiled classes -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin.version}</version>
+                    <configuration>
+                        <skip>${dependency.skip}</skip>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <modules>
+        <module>awssdkv2-java11-async-client</module>
+    </modules>
+
+    <!-- For releasing to maven central -->
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <failOnError>false</failOnError>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <configuration>
+                            <tagNameFormat>v@{project.version}</tagNameFormat>
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                            <useReleaseProfile>false</useReleaseProfile>
+                            <releaseProfiles>release</releaseProfiles>
+                            <goals>deploy</goals>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
